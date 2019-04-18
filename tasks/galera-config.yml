@@ -1,0 +1,14 @@
+---
+- name: Service Config | Create the WSREP configuration file
+  template:
+    dest: /etc/my.cnf.d/galera.cnf
+    src: galera.cnf.j2
+    backup: true
+
+- name: Service Config | Create new galera_new_cluster file
+  template:
+    dest: /usr/bin/galera_new_cluster
+    src: galera_new_cluster.j2
+    mode: 0755
+    owner: root
+    group: root

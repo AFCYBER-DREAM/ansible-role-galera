@@ -1,0 +1,18 @@
+---
+
+- name: Include tasks for OS
+  include_tasks: "{{ ansible_os_family | lower }}.yml"
+
+- name: Install Certificates
+  include_tasks: galera-ssl.yml
+  when: galera_ssl or mysql_ssl
+  tags:
+    - install_ssl_certs
+
+- name: Include galera configuration
+  include_tasks: galera-config.yml
+  tags:
+    - galera_config
+
+- name: Initialize galera cluster
+  include_tasks: galera-database.yml

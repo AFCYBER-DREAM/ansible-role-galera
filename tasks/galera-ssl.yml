@@ -1,0 +1,20 @@
+---
+- name: Install Galera CA cert on all nodes
+  copy:
+    content: "{{ galera_certs.ca_cert }}"
+    dest: "{{ galera_ssl_ca }}"
+    mode: 0644
+
+- name: Install Galera Keys on all nodes
+  copy:
+    content: "{{ galera_host_certs.key }}"
+    dest: "{{ galera_ssl_key }}"
+    owner: mysql
+    mode: 0600
+
+- name: Install Galera Certs on all nodes
+  copy:
+    content: "{{ galera_host_certs.cert }}"
+    dest: "{{ galera_ssl_cert }}"
+    owner: mysql
+    mode: 0644
