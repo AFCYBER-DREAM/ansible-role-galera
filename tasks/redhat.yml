@@ -1,0 +1,63 @@
+---
+- import_role:
+    name: ansible-role-security
+  vars:
+    security: '{{ galera_security }}'
+  tags:
+    - security
+
+- import_role:
+    name: "ansible-role-repositories"
+  vars:
+    repositories: "{{ galera_repos }}"
+  tags:
+    - repos
+    - packages
+
+- name: RedHat | Ensure that old packages are removed
+  yum:
+    name:
+      - 'mariadb-server-5.*'
+      - 'mariadb-libs-5.*'
+    state: "absent"
+  register: package_state
+  tags:
+    - packages
+
+- import_role:
+    name: "ansible-role-packages"
+  vars:
+    packages: "{{ galera_packages }}"
+  tags:
+    - packages
+
+
+- name: RedHat | Update max_open_files
+  ini_file:
+    path: /etc/systemd/system/mariadb.service.d/mariadb.service.conf
+    section: Service
+    option: LimitNOFILE
+    value: 8192
+    mode: 0644
+  notify: "Handler | Reload Systemd Daemon"
+  tags:
+    - service_config
+
+- name: RedHat | Adjust OOM Score
+  ini_file:
+    path: /etc/systemd/system/mariadb.service.d/mariadb.service.conf
+    section: Service
+    option: OOMScoreAdjust
+    value: 0
+    mode: 0644
+  notify: "Handler | Reload Systemd Daemon"
+  tags:
+    - service_config
+
+- meta: flush_handlers
+
+- name: RedHat | ensuring mariadb mysql is enabled on boot
+  service:
+    name: "mariadb"
+    enabled: true
+  become: true

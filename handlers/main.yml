@@ -1,0 +1,20 @@
+---
+# handlers file for ansible-role-galera
+- name: "Handler | Restart MySQL"
+  service:
+    name: "mariadb"
+    state: "restarted"
+
+- name: "Handler | Start MySQL"
+  service:
+    name: "mariadb"
+    state: "started"
+
+- name: "Handler | Reload MySQL"
+  service:
+    name: "mariadb"
+    state: "reloaded"
+
+- name: "Handler | Reload Systemd Daemon"
+  systemd:
+    daemon_reload: true

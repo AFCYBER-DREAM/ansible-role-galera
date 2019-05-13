@@ -1,0 +1,57 @@
+---
+
+# Cluster Options
+# Define the name of the cluster
+galera_cluster_name: 'galera-cluster'
+
+# Required Repositories
+galera_repos:
+  redhat:
+    - { url: "https://{{ ansible_distribution | lower }}7.iuscommunity.org/ius-release.rpm" }
+
+# Required Packages, should be defined as a list to pass to packages repo
+galera_packages:
+  update_all: true
+  redhat:
+    - 'mariadb101u'
+    - 'mariadb101u-server'
+    - 'mariadb101u-server-galera'
+    - 'MySQL-python'
+
+galera_security:
+  selinux_te_files:
+    - { name: "afcyber-galera", version: "1.0", te_file: "afcyber-galera.te"}
+  security_ports:
+    - { port: 3306, protocol: 'tcp', port_type: 'mysqld_port_t'}
+    - { port: 4444, protocol: 'tcp', port_type: 'mysqld_port_t'}
+    - { port: 4567, protocol: 'tcp', port_type: 'mysqld_port_t'}
+    - { port: 4567, protocol: 'udp', port_type: 'mysqld_port_t'}
+    - { port: 4568, protocol: 'tcp', port_type: 'mysqld_port_t'}
+
+
+# Networking Options
+# Define the interface to bind the cluster
+# normally this would be a private interface
+galera_cluster_bind_interface: 'eth0'
+
+# Define bind address for galera cluster
+galera_cluster_bind_address: "{{ hostvars[inventory_hostname]['ansible_' + galera_cluster_bind_interface]['ipv4']['address'] }}"
+
+# Replication Options
+galera_wsrep_node_address_port: 4567
+galera_wsrep_node_address: '{{ galera_cluster_bind_address }}:{{ galera_wsrep_node_address_port }}'
+
+# Security Options
+galera_configure_firewall: true
+galera_configure_selinux: true
+galera_mysqld_ssl: true
+
+# This is the default location on EL based systems
+# These are the locations of where the keys will be installed
+galera_mysqld_ssl_key: '/etc/pki/tls/private/{{ ansible_hostname }}-key.pem'
+galera_mysqld_ssl_cert: '/etc/pki/tls/certs/{{ ansible_hostname }}-cert.crt'
+galera_mysqld_ssl_ca: '/etc/pki/tls/certs/ca-cert.crt'
+galera_ssl: true
+galera_ssl_key: '/etc/pki/tls/private/{{ ansible_hostname }}-key.pem'
+galera_ssl_cert: '/etc/pki/tls/certs/{{ ansible_hostname }}-cert.crt'
+galera_ssl_ca: '/etc/pki/tls/certs/ca-cert.crt'

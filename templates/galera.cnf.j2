@@ -1,0 +1,24 @@
+[mysqld]
+binlog_format=ROW
+default-storage-engine=innodb
+innodb_autoinc_lock_mode=2
+query_cache_size=0
+query_cache_type=0
+{% if galera_mysqld_ssl %}
+ssl-ca = {{ galera_mysqld_ssl_ca }}
+ssl-key = {{ galera_mysqld_ssl_key }}
+ssl-cert = {{ galera_mysqld_ssl_cert }}
+{% endif %}
+
+[galera]
+wsrep_on=ON
+wsrep_node_name={{ ansible_hostname }}
+wsrep_provider=/usr/lib64/galera/libgalera_smm.so
+wsrep_cluster_name="{{ galera_cluster_name }}"
+wsrep_cluster_address="gcomm://{% for host in play_hosts %}{{ hostvars[host]['ansible_' + galera_cluster_bind_interface]['ipv4']['address'] }}{% if not loop.last %},{% endif %}{% endfor %}"
+{% if galera_ssl %}
+wsrep_provider_options="socket.ssl_key={{ galera_ssl_key }};socket.ssl_cert={{ galera_ssl_cert }};socket.ssl_ca={{ galera_ssl_ca }}"
+{% endif %}
+wsrep_sst_method=rsync
+
+wsrep_node_address="{{ galera_wsrep_node_address }}"

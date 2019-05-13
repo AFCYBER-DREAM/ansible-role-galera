@@ -1,0 +1,44 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+  enabled: true
+platforms:
+  - name: node1
+    image: centos:7
+    command: "/usr/sbin/init"
+    env:
+      container: docker
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /tmp/container-node1:/run
+  - name: node2
+    image: centos:7
+    command: "/usr/sbin/init"
+    env:
+      container: docker
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /tmp/container-node2:/run
+  - name: node3
+    image: centos:7
+    command: "/usr/sbin/init"
+    env:
+      container: docker
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /tmp/container-node3:/run
+scenario:
+  name: container
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+    enabled: true
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

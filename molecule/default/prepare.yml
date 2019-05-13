@@ -1,0 +1,21 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: true
+  become: true
+  vars:
+    epel: true
+    galera_packages:
+      # During testing we don't need to take the time to update packages
+      # we only want to confirm that the role runs properly.
+      update_all: false
+  pre_tasks:
+    - import_role:
+        name: ansible-role-repositories
+
+    - name: Install required software
+      yum:
+        name:
+          - python2-pip
+          - python-setuptools
+        state: latest
