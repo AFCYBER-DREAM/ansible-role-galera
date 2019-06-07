@@ -4,6 +4,7 @@
     dest: /etc/my.cnf.d/galera.cnf
     src: galera.cnf.j2
     backup: true
+  notify: start galera cluster
 
 - name: Service Config | Create new galera_new_cluster file
   template:
@@ -12,3 +13,4 @@
     mode: 0755
     owner: root
     group: root
+  notify: start galera cluster

@@ -1,15 +1,21 @@
 ---
-- name: Galera-Cluster | Create new galeradb cluster on single host
-  command: galera_new_cluster
-  register: new_cluster
-  changed_when: new_cluster.rc == 0
-  failed_when: new_cluster.rc == 1
-  delegate_to: "{{ play_hosts[0] }}"
-  run_once: true
-  tags:
-    - initialize_cluster
-
-- name: Galera-Cluster | Start all mariadb nodes
+- name: "galera-cluster | ensure all nodes are offline"
   service:
-    name: mariadb
-    state: started
+    name: "mariadb"
+    state: stopped
+
+- block:
+    - name: galera-cluster | create new galeradb cluster on single host
+      command: galera_new_cluster
+      register: new_cluster
+      changed_when: new_cluster.rc == 0
+      failed_when: new_cluster.rc == 1
+      delegate_to: "{{ play_hosts[0] }}"
+      run_once: true
+      tags:
+        - initialize_cluster
+
+    - name: galera-cluster | start all mariadb nodes
+      service:
+        name: mariadb
+        state: started

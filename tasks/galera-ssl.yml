@@ -11,6 +11,7 @@
     dest: "{{ galera_ssl_key }}"
     owner: mysql
     mode: 0600
+  notify: start galera cluster
 
 - name: Install Galera Certs on all nodes
   copy:
@@ -18,3 +19,4 @@
     dest: "{{ galera_ssl_cert }}"
     owner: mysql
     mode: 0644
+  notify: start galera cluster

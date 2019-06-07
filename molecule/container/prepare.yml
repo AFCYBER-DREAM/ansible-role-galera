@@ -3,9 +3,11 @@
   hosts: all
   gather_facts: true
   become: true
-  tasks:
-    - name: Install needed packages for ansible
-      yum:
-        name:
-          - iproute
-          - which
+  vars:
+    packages:
+      redhat:
+        - iproute
+        - which
+  roles:
+    - { role: ansible-role-packages }
+...

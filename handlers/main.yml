@@ -18,3 +18,6 @@
 - name: "Handler | Reload Systemd Daemon"
   systemd:
     daemon_reload: true
+
+- name: "start galera cluster"
+  include_tasks: tasks/galera-database.yml

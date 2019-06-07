@@ -14,5 +14,5 @@
   tags:
     - galera_config
 
-- name: Initialize galera cluster
-  include_tasks: galera-database.yml
+- name: Flush handlers
+  meta: flush_handlers
