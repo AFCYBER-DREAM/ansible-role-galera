@@ -1,5 +1,6 @@
 ansible-role-galera
 =========
+[![Build Status](https://travis-ci.com/AFCYBER-DREAM/ansible-role-galera.svg?branch=master)](https://travis-ci.com/AFCYBER-DREAM/ansible-role-galera)
 
 A secure galera deployment
 
